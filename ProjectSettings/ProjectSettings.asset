@@ -830,6 +830,7 @@ PlayerSettings:
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
+    Android: SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
     Standalone: SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
   additionalCompilerArguments: {}
   platformArchitecture: {}
@@ -930,10 +931,10 @@ PlayerSettings:
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
   enableDirectStorage: 0
-  cloudProjectId: f44d79be-55da-424e-86ef-a2b3d6447c80
+  cloudProjectId: 33641d83-567b-430f-a783-aadaa19bf45b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: TheLastTrain
+  projectName: TheLastTrain_2.0
   organizationId: ridathedeveloper
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
