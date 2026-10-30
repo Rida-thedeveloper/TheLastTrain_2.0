@@ -1,45 +1,25 @@
 using UnityEngine;
-using UnityEngine.Video;
-using UnityEngine.SceneManagement;
 
 public class StartTrailer : MonoBehaviour
 {
     public GameObject thumbnail;
     public GameObject playButton;
-    public GameObject videoScreen;
 
-    public VideoPlayer videoPlayer;
-
-    public string nextSceneName = "Untitled 2";
-
-    void Start()
-    {
-        videoPlayer.loopPointReached += VideoFinished;
-    }
+    public IntroVideoLoader introVideoLoader;
 
     public void PlayTrailer()
     {
-        Debug.Log("PlayTrailer CALLED");   // button click aa raha hai ya nahi
+        Debug.Log("PLAY BUTTON CLICKED!");
 
-        if (thumbnail == null) Debug.LogError("thumbnail reference NULL hai!");
-        else thumbnail.SetActive(false);
+        if (thumbnail != null)
+            thumbnail.SetActive(false);
 
-        if (playButton == null) Debug.LogError("playButton reference NULL hai!");
-        else playButton.SetActive(false);
+        if (playButton != null)
+            playButton.SetActive(false);
 
-        if (videoScreen == null) Debug.LogError("videoScreen reference NULL hai!");
+        if (introVideoLoader != null)
+            introVideoLoader.PlayIntro();
         else
-        {
-            videoScreen.SetActive(true);
-            Debug.Log("VideoScreen ACTIVE ho gaya: " + videoScreen.activeInHierarchy);
-        }
-
-        if (videoPlayer == null) Debug.LogError("videoPlayer reference NULL hai!");
-        else videoPlayer.Play();
-    }
-
-    void VideoFinished(VideoPlayer vp)
-    {
-        SceneManager.LoadScene(nextSceneName);
+            Debug.LogError("IntroVideoLoader reference NULL hai!");
     }
 }
