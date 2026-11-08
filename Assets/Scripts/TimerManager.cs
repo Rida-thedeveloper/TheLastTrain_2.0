@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,11 @@ public class TimerManager : MonoBehaviour
     [Header("Game Over")]
     public GameObject gameOverCanvas;
 
+    [Header("Game Over Audio")]
+    public AudioSource gameOverAudioSource;
+    public AudioClip gameOverSound;
+    public AudioClip buttonClickSound;
+
     private bool timerRunning = false;
     private bool timeUp = false;
 
@@ -22,6 +28,13 @@ public class TimerManager : MonoBehaviour
 
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
+
+        if (gameOverAudioSource != null)
+        {
+            gameOverAudioSource.playOnAwake = false;
+            gameOverAudioSource.loop = false;
+            gameOverAudioSource.spatialBlend = 0f;
+        }
     }
 
     void Update()
@@ -91,6 +104,12 @@ public class TimerManager : MonoBehaviour
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(true);
 
+        // Game Over panel sound
+        if (gameOverAudioSource != null && gameOverSound != null)
+        {
+            gameOverAudioSource.PlayOneShot(gameOverSound);
+        }
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -105,6 +124,12 @@ public class TimerManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        // Play button click sound before restarting
+        if (gameOverAudioSource != null && buttonClickSound != null)
+        {
+            gameOverAudioSource.PlayOneShot(buttonClickSound);
+        }
+
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().buildIndex
         );

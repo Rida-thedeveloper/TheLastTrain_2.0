@@ -4,6 +4,7 @@ using UnityEngine;
 public class CluePickup : MonoBehaviour
 {
     public string clueName = "Old Train Ticket";
+    public TMPro.TMP_Text promptText;
     public GameObject pickupPrompt;
     public GameObject clueVisual;
     public Level3MissionUI missionUI;
@@ -38,7 +39,12 @@ public class CluePickup : MonoBehaviour
         playerNearby = true;
 
         if (pickupPrompt != null)
+        {
+            if (promptText != null)
+                promptText.text = "PRESS E TO PICK UP " + clueName.ToUpper();
+
             pickupPrompt.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)

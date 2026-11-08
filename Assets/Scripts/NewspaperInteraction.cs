@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class NewspaperInteraction : MonoBehaviour
@@ -15,18 +16,16 @@ public class NewspaperInteraction : MonoBehaviour
 
     void Update()
     {
-        if (collected || player == null)
+        // No distance check needed.
+        // UniversalInteractable handles the E interaction.
+    }
+
+    public void Interact()
+    {
+        if (collected)
             return;
 
-        float distance = Vector3.Distance(
-            transform.position,
-            player.transform.position
-        );
-
-        if (distance <= pickupDistance && Input.GetKeyDown(KeyCode.E))
-        {
-            CollectNewspaper();
-        }
+        CollectNewspaper();
     }
 
     void CollectNewspaper()
@@ -58,7 +57,7 @@ public class NewspaperInteraction : MonoBehaviour
         {
             objectivePanelManager.ShowObjective(
                 "FIND THE KEY",
-                "The newspaper revealed a mysterious train accident that happened years ago. The date seems strangely familiar, and this train may be connected to what happened that night. There must be a reason you found this newspaper here. Find the key and see if it can lead you closer to the truth.",
+                "The newspaper revealed a mysterious train accident that happened years ago and this train may be connected to what happened that night. Find the key and see if it can lead you closer to the truth.",
                 "LET'S FIND",
                 false
             );

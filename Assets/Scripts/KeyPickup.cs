@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class KeyPickup : MonoBehaviour
@@ -9,7 +10,25 @@ public class KeyPickup : MonoBehaviour
     [Header("Objective")]
     public ObjectivePanelManager objectivePanelManager;
 
+    [Header("Door Trigger")]
+    public Collider doorTrigger;
+
+    [Header("Door Glow")]
+    public GameObject doorGlowEffects;
+
     private bool keyCollected = false;
+    private bool canInteract = false;
+
+    void Start()
+    {
+        // Door interaction disabled initially
+        if (doorTrigger != null)
+            doorTrigger.enabled = false;
+
+        // Door glow disabled initially
+        if (doorGlowEffects != null)
+            doorGlowEffects.SetActive(false);
+    }
 
     void Update()
     {
@@ -21,15 +40,42 @@ public class KeyPickup : MonoBehaviour
             player.transform.position
         );
 
-        if (distance <= pickupDistance && Input.GetKeyDown(KeyCode.E))
+        if (distance <= pickupDistance && canInteract)
         {
             PickupKey();
+            canInteract = false;
+        }
+    }
+
+    public void Interact()
+    {
+        if (!keyCollected)
+        {
+            canInteract = true;
         }
     }
 
     void PickupKey()
     {
         keyCollected = true;
+
+        // Enable Door interaction after collecting key
+        if (doorTrigger != null)
+        {
+            doorTrigger.enabled = true;
+            Debug.Log("DOOR TRIGGER ENABLED!");
+        }
+        else
+        {
+            Debug.LogError("Door Trigger reference is missing!", this);
+        }
+
+        // Enable Door Glow after collecting key
+        if (doorGlowEffects != null)
+        {
+            doorGlowEffects.SetActive(true);
+            Debug.Log("DOOR GLOW ENABLED!");
+        }
 
         // Key disappear
         gameObject.SetActive(false);
@@ -39,7 +85,7 @@ public class KeyPickup : MonoBehaviour
         {
             objectivePanelManager.ShowObjective(
                 "FOUND THE KEY",
-                "You found the key. Whatever happened to this train may be connected to the accident described in the newspaper. There is only one way to find out what is waiting ahead. Use the key and open the door.",
+                "You found the key. Find out what is waiting ahead. Use the key and open the door.",
                 "OPEN DOOR",
                 true
             );

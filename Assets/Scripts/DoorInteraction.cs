@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -16,7 +17,6 @@ public class DoorInteraction : MonoBehaviour
     public GameObject train;
     public GameObject objectiveCanvas;
 
-    private bool playerNearDoor = false;
     private bool cutscenePlaying = false;
 
     void Start()
@@ -27,23 +27,20 @@ public class DoorInteraction : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Interact()
     {
-        if (!playerNearDoor || cutscenePlaying)
+        if (cutscenePlaying)
             return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        // Newspaper aur Key dono inactive hone chahiye
+        if (newspaper != null && !newspaper.activeSelf &&
+            key != null && !key.activeSelf)
         {
-            // Newspaper aur Key dono inactive hone chahiye
-            if (newspaper != null && !newspaper.activeSelf &&
-                key != null && !key.activeSelf)
-            {
-                OpenDoor();
-            }
-            else
-            {
-                Debug.Log("You need to find the newspaper and key first!");
-            }
+            OpenDoor();
+        }
+        else
+        {
+            Debug.Log("You need to find the newspaper and key first!");
         }
     }
 
@@ -51,12 +48,20 @@ public class DoorInteraction : MonoBehaviour
     {
         Debug.Log("NEWSPAPER + KEY FOUND → DOOR CUTSCENE START");
 
-
-        // Stop timer immediately when the door is successfully opened
+        // Stop and disable timer
         TimerManager timer = FindFirstObjectByType<TimerManager>();
 
         if (timer != null)
+        {
             timer.StopTimer();
+
+            if (timer.timerTextObject != null)
+                timer.timerTextObject.SetActive(false);
+
+            timer.enabled = false;
+
+            Debug.Log("Timer stopped and disabled!");
+        }
 
         cutscenePlaying = true;
 
@@ -105,22 +110,6 @@ public class DoorInteraction : MonoBehaviour
 
         if (manager != null)
             manager.ShowLevelComplete();
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            playerNearDoor = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            playerNearDoor = false;
-        }
     }
 
     void OnDestroy()

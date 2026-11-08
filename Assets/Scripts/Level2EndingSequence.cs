@@ -13,8 +13,13 @@ public class Level2EndingSequence : MonoBehaviour
 
     [Header("Player")]
     public GameObject player;
+
     [Header("Fuse Box")]
     public GameObject fuseBox;
+
+    [Header("Timer")]
+    public TimerManager timerManager;
+
     private bool endingStarted = false;
 
     void Start()
@@ -47,6 +52,23 @@ public class Level2EndingSequence : MonoBehaviour
         }
 
         endingStarted = true;
+
+        // Stop and disable the Level 2 timer
+        if (timerManager != null)
+        {
+            timerManager.StopTimer();
+
+            if (timerManager.timerTextObject != null)
+                timerManager.timerTextObject.SetActive(false);
+
+            timerManager.enabled = false;
+
+            Debug.Log("Level 2 Timer stopped and disabled!");
+        }
+        else
+        {
+            Debug.LogError("TimerManager reference is missing!");
+        }
 
         if (fuseBox != null)
         {

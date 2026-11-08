@@ -28,8 +28,8 @@ public class Level2SpiderScare : MonoBehaviour
         if (videoCanvas != null)
             videoCanvas.SetActive(false);
 
-        if (battery != null && battery.batteryModel != null)
-            battery.batteryModel.SetActive(false);
+        if (battery == null)
+            Debug.LogError("SpiderScare: Battery reference is missing!", this);
 
         if (flashlight == null)
             Debug.LogError("SpiderScare: Flashlight Light is not assigned!", this);
@@ -69,7 +69,6 @@ public class Level2SpiderScare : MonoBehaviour
         if (angle > flashlight.spotAngle * 0.5f)
             return;
 
-        // Check whether the spider is the first object hit.
         if (Physics.Raycast(
             origin,
             direction.normalized,
@@ -90,8 +89,11 @@ public class Level2SpiderScare : MonoBehaviour
             }
             else
             {
-                // Remove this log later if the Console gets too busy.
-                Debug.DrawRay(origin, direction.normalized * distance, Color.red);
+                Debug.DrawRay(
+                    origin,
+                    direction.normalized * distance,
+                    Color.red
+                );
             }
         }
     }
@@ -139,8 +141,11 @@ public class Level2SpiderScare : MonoBehaviour
         if (videoCanvas != null)
             videoCanvas.SetActive(false);
 
-        if (battery != null && battery.batteryModel != null)
-            battery.batteryModel.SetActive(true);
+        // Activate battery visual and trigger after scare
+        if (battery != null)
+        {
+            battery.ActivateBattery();
+        }
 
         if (player != null)
         {

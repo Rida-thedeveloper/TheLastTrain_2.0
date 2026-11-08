@@ -14,15 +14,32 @@ public class BugInteraction : MonoBehaviour
     public GameObject bugVideoCanvas;
     public VideoPlayer bugVideoPlayer;
 
+    [Header("Temporary Protection")]
+    public static float protectedUntil = 0f;
+
     private bool videoPlaying = false;
+
+    public static void BlockScareForSeconds(float seconds)
+    {
+        protectedUntil = Mathf.Max(
+            protectedUntil,
+            Time.time + seconds
+        );
+    }
 
     void Update()
     {
-        // Videos disabled: do nothing, no video references needed.
         if (!allowVideoInteraction || videoPlaying || player == null)
             return;
 
-        // Avoid trying to play if required references are missing.
+        // Temporary protection after collecting/interacting
+        if (Time.time < protectedUntil)
+            return;
+
+        // Original protected-area detection
+        if (IsPlayerInsideProtectedArea())
+            return;
+
         if (bugVideoPlayer == null || bugVideoCanvas == null)
             return;
 
@@ -36,6 +53,43 @@ public class BugInteraction : MonoBehaviour
         {
             PlayBugVideo();
         }
+    }
+
+    bool IsPlayerInsideProtectedArea()
+    {
+        Collider playerCollider = player.GetComponent<Collider>();
+
+        Collider[] nearbyColliders;
+
+        if (playerCollider != null)
+        {
+            Bounds bounds = playerCollider.bounds;
+
+            nearbyColliders = Physics.OverlapBox(
+                bounds.center,
+                bounds.extents,
+                Quaternion.identity,
+                ~0,
+                QueryTriggerInteraction.Collide
+            );
+        }
+        else
+        {
+            nearbyColliders = Physics.OverlapSphere(
+                player.transform.position,
+                0.25f,
+                ~0,
+                QueryTriggerInteraction.Collide
+            );
+        }
+
+        foreach (Collider col in nearbyColliders)
+        {
+            if (col.CompareTag("NoBugScare"))
+                return true;
+        }
+
+        return false;
     }
 
     void PlayBugVideo()
